@@ -1,0 +1,16 @@
+---
+interface Props { intrebari: { q: string; a: string }[] }
+const { intrebari } = Astro.props;
+---
+
+<div class="border-t border-line">
+  {intrebari.map((i) => (
+    <details class="group border-b border-line">
+      <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-3 text-[1rem] font-bold [&::-webkit-details-marker]:hidden">
+        {i.q}
+        <svg class="shrink-0 group-open:rotate-180" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+      </summary>
+      <p class="max-w-3xl pb-4 text-[0.95rem] text-ink-soft">{i.a}</p>
+    </details>
+  ))}
+</div>

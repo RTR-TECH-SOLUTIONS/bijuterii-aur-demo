@@ -1,0 +1,114 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Card from "../../components/Card.astro";
+import { site } from "../../data/site";
+import { bijuterii, categoriiInfo, provenienteInfo } from "../../data/bijuterii";
+---
+
+<Layout
+  title={`Bijuterii din aur de 14K disponibile · ${site.nume}`}
+  description="Inele, verighete, lanțuri, brățări și cercei din aur de 14K. Gramaj, stare și preț la fiecare piesă."
+>
+  <section class="wrap pt-7 pb-16">
+    <h1 class="!text-[1.9rem]">Bijuterii</h1>
+    <p class="mt-3 max-w-2xl text-ink-soft">Toate sunt din aur de 14K, marcat 585. Prețul de la fiecare piesă este cel final, pentru gramajul afișat.</p>
+
+    <form id="filtre" class="mt-6 grid gap-4 border border-line bg-paper-2 p-4 lg:grid-cols-[1fr_auto] lg:items-end">
+      <div class="grid gap-4">
+        <fieldset class="flex flex-wrap items-center gap-2">
+          <legend class="float-left mr-3 w-24 text-[0.95rem] font-medium">Tip</legend>
+          <label class="chip"><input type="radio" name="categorie" value="" checked /><span>Toate</span></label>
+          {Object.entries(categoriiInfo).map(([k, v]) => (
+            <label class="chip"><input type="radio" name="categorie" value={k} /><span>{v}</span></label>
+          ))}
+        </fieldset>
+        <fieldset class="flex flex-wrap items-center gap-2">
+          <legend class="float-left mr-3 w-24 text-[0.95rem] font-medium">Proveniență</legend>
+          <label class="chip"><input type="radio" name="provenienta" value="" checked /><span>Toate</span></label>
+          {Object.entries(provenienteInfo).map(([k, v]) => (
+            <label class="chip"><input type="radio" name="provenienta" value={k} /><span>{v.eticheta}</span></label>
+          ))}
+        </fieldset>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+      <label class="flex items-center gap-3 text-[0.95rem] font-medium">
+        <span class="w-24 lg:w-auto">Căutare</span>
+        <input type="search" name="q" class="camp !min-h-10" placeholder="nume sau cod" />
+      </label>
+      <label class="flex items-center gap-3 text-[0.95rem] font-medium">
+        <span class="w-24 lg:w-auto">Ordonare</span>
+        <select name="ordine" class="camp !min-h-10">
+          <option value="">Cele mai noi</option>
+          <option value="pret-asc">Preț crescător</option>
+          <option value="pret-desc">Preț descrescător</option>
+          <option value="gramaj-desc">Gramaj mare întâi</option>
+        </select>
+      </label>
+      </div>
+    </form>
+
+    <p id="numar" class="mt-5 text-[0.95rem] text-ink-soft" aria-live="polite">{bijuterii.length} piese</p>
+
+    <div id="grila" class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
+      {bijuterii.map((p, i) => <Card piesa={p} eager={i < 4} />)}
+    </div>
+    <p id="gol" class="hidden py-16 text-center text-ink-soft">Nu avem acum nicio piesă pentru filtrele alese. Scrieți-ne pe WhatsApp ce căutați și vă anunțăm când apare.</p>
+  </section>
+</Layout>
+
+<style>
+  .chip { cursor: pointer; }
+  .chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .chip span {
+    display: inline-flex; align-items: center; min-height: 2.4rem; padding: 0.3rem 0.85rem;
+    border: 1px solid #bdbab2; border-radius: var(--radius-btn);
+    font-size: 0.95rem; font-weight: 500; background: var(--color-white);
+    transition: background-color 150ms ease-out, border-color 150ms ease-out;
+  }
+  .chip:hover span { border-color: var(--color-ink); }
+  .chip input:checked + span { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-white); }
+  .chip input:focus-visible + span { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+</style>
+
+<script>
+  const form = document.getElementById("filtre") as HTMLFormElement;
+  const grila = document.getElementById("grila")!;
+  const numar = document.getElementById("numar")!;
+  const gol = document.getElementById("gol")!;
+  const piese = [...grila.querySelectorAll<HTMLElement>(".piesa")];
+  const initial = [...piese];
+
+  // filtrele pot veni din link, de exemplu /bijuterii?provenienta=amanet
+  const params = new URLSearchParams(location.search);
+  const camp = form.querySelector<HTMLInputElement>('input[name="q"]')!;
+  camp.value = params.get("q") ?? "";
+  for (const cheie of ["categorie", "provenienta"]) {
+    const v = params.get(cheie);
+    const radio = v && form.querySelector<HTMLInputElement>(`input[name="${cheie}"][value="${CSS.escape(v)}"]`);
+    if (radio) radio.checked = true;
+  }
+
+  const aplica = () => {
+    const d = new FormData(form);
+    const cat = d.get("categorie"), prov = d.get("provenienta"), ord = String(d.get("ordine"));
+    const q = String(d.get("q") ?? "").trim().toLowerCase();
+    const lista = [...initial];
+    if (ord) {
+      const [camp, sens] = ord.split("-");
+      lista.sort((a, b) => (Number(a.dataset[camp]) - Number(b.dataset[camp])) * (sens === "asc" ? 1 : -1));
+    }
+    let vizibile = 0;
+    for (const el of lista) {
+      const ok = (!cat || el.dataset.categorie === cat) && (!prov || el.dataset.provenienta === prov) && (!q || el.dataset.text!.includes(q));
+      el.hidden = !ok;
+      if (ok) vizibile++;
+      grila.appendChild(el);
+    }
+    numar.textContent = vizibile === 1 ? "1 piesă" : `${vizibile} piese`;
+    gol.classList.toggle("hidden", vizibile > 0);
+  };
+  form.addEventListener("change", aplica);
+  form.addEventListener("input", aplica);
+  form.addEventListener("submit", (e) => e.preventDefault());
+  aplica();
+</script>

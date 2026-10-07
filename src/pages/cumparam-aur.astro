@@ -1,0 +1,66 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import Calculator from "../components/Calculator.astro";
+import Faq from "../components/Faq.astro";
+import { img } from "../data/img";
+import { site, preturi } from "../data/site";
+
+const intrebari = [
+  { q: "Ce acte îmi trebuie?", a: "Doar buletinul. La cumpărare se întocmește un borderou de achiziție cu datele dumneavoastră, greutatea și suma plătită." },
+  { q: "Cumpărați aur fără marcaj?", a: "Da, după ce îl verificăm pe piatra de probă. Dacă titlul este mai mic decât cel declarat, vă spunem pe loc și refaceți socoteala." },
+  { q: "Ce se întâmplă cu pietrele?", a: "Se scad din greutate, pentru că plătim doar aurul. Dacă doriți să le păstrați, le scoatem și vi le dăm înapoi." },
+  { q: "Când primesc banii?", a: "La predare, numerar sau prin transfer în aceeași zi. Nu luăm aurul înainte de plată." },
+  { q: "Pot schimba aurul vechi pe o bijuterie?", a: "Da. Valoarea aurului adus se scade din prețul piesei alese, nouă sau din cele disponibile." },
+];
+---
+
+<Layout
+  title={`Cumpărăm aur de la persoane fizice · prețuri pe gram · ${site.nume}`}
+  description="Cumpărăm bijuterii din aur, verighete și aur rupt de la persoane fizice. Prețuri pe gram pentru 9K, 14K, 18K, 22K și 24K, plata la predare."
+>
+  <section class="wrap grid gap-10 pt-8 md:pt-10 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
+    <div>
+      <h1 class="!text-[clamp(1.7rem,1.3rem+1.6vw,2.4rem)]">Cumpărăm aur, cu plata la predare</h1>
+      <p class="mt-5 max-w-xl text-[1.1rem] text-ink-soft">
+        Bijuterii vechi, rupte, desperecheate, verighete, monede. Contează greutatea și titlul, nu felul în care arată.
+      </p>
+      <table class="preturi mt-8 w-full cifra">
+        <caption class="sr-only">Prețuri de cumpărare pe gram</caption>
+        <thead><tr><th scope="col">Titlu</th><th scope="col">Marcaj</th><th scope="col" class="text-right">Plătim pe gram</th></tr></thead>
+        <tbody>
+          {preturi.cumparare.map((p) => (
+            <tr><th scope="row">{p.carat}</th><td>{p.titlu}</td><td class="text-right"><strong>{p.leiGram} lei</strong></td></tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="mt-3 text-sm text-ink-soft">Prețuri din {preturi.actualizat}. Peste 50 g, prețul pe gram se negociază.</p>
+    </div>
+    <div class="lg:pt-2"><Calculator /></div>
+  </section>
+
+  <section class="wrap sectiune grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:gap-16">
+    <div>
+      <h2>Cum decurge</h2>
+      <ol class="mt-6 space-y-5 border-t border-ink pt-5">
+        <li><h3>1. Trimiteți o poză</h3><p class="mt-1 text-ink-soft">Pe WhatsApp, cu piesa și, dacă se vede, marcajul. Dacă aveți un cântar de bucătărie, spuneți-ne și greutatea aproximativă.</p></li>
+        <li><h3>2. Primiți prețul pe gram</h3><p class="mt-1 text-ink-soft">Vă răspundem cu titlul probabil și cu suma estimată, înainte de orice drum.</p></li>
+        <li><h3>3. Verificare și cântărire</h3><p class="mt-1 text-ink-soft">Proba pe piatră și cântărirea la 0,01 g se fac în fața dumneavoastră.</p></li>
+        <li><h3>4. Plata</h3><p class="mt-1 text-ink-soft">Numerar sau transfer, pe loc, cu borderou de achiziție.</p></li>
+      </ol>
+    </div>
+    <Image src={img("maini-bijutier")} alt="Mâinile unui bijutier care verifică un inel" widths={[640, 1000]} sizes="(min-width: 1024px) 42vw, 100vw" class="aspect-[4/3] w-full rounded-(--radius-box) object-cover lg:aspect-auto lg:h-full" />
+  </section>
+
+  <section class="wrap pb-24">
+    <h2>Întrebări</h2>
+    <div class="mt-8"><Faq intrebari={intrebari} /></div>
+  </section>
+</Layout>
+
+<style>
+  .preturi th, .preturi td { padding: 0.8rem 0; border-bottom: 1px solid var(--color-line); font-weight: 400; text-align: left; }
+  .preturi thead th { font-size: 0.875rem; color: var(--color-ink-soft); border-bottom-color: var(--color-ink); }
+  .preturi tbody th { font-weight: 650; font-size: 1.15rem; }
+  .preturi td strong { font-size: 1.25rem; font-weight: 700; }
+</style>

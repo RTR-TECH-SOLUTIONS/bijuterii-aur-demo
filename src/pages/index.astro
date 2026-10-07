@@ -1,0 +1,145 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card.astro";
+import Calculator from "../components/Calculator.astro";
+import Faq from "../components/Faq.astro";
+import IconWa from "../components/IconWa.astro";
+import { img } from "../data/img";
+import { site, u, waLink, preturi } from "../data/site";
+import { bijuterii, categoriiInfo, type Categorie } from "../data/bijuterii";
+
+const alese = bijuterii.slice(0, 8);
+const pozaCategorie: Record<Categorie, string> = {
+  inele: "ghiul-onix", verighete: "verighete-satin", lanturi: "lant-curb", bratari: "bratara-fixa", cercei: "cercei-creole-groase",
+};
+const cate = (c: string) => bijuterii.filter((b) => b.categorie === c).length;
+
+const intrebari = [
+  { q: "De unde știu că este aur de 14K?", a: "Fiecare piesă are marcajul 585 aplicat pe metal. Înainte de a o pune la vânzare o verificăm pe piatra de probă, iar la cerere vă trimitem pe WhatsApp poza marcajului și un clip cu piesa pe cântar." },
+  { q: "Cum se calculează prețul unei bijuterii?", a: "Greutatea piesei înmulțită cu prețul pe gram, la care se adaugă manopera la piesele noi și pietrele, dacă există. Gramajul și prețul sunt afișate la fiecare piesă." },
+  { q: "Pot vedea bijuteria înainte să o plătesc?", a: "Da. Vă trimitem poze și clip video reale, din mai multe unghiuri. Coletul poate fi deschis la curier înainte de plată, iar dacă piesa nu corespunde o refuzați pe loc." },
+  { q: "Bijuteriile din amanet sunt purtate?", a: "Da, și scriem asta la fiecare piesă, împreună cu starea ei. Înainte de vânzare le curățăm la ultrasunete, le lustruim și verificăm închizătorile și ghearele pietrelor." },
+  { q: "Cumpărați și aur rupt sau bijuterii desperecheate?", a: "Da. La cumpărare contează greutatea și titlul aurului, nu starea piesei. Pietrele se scad din greutate." },
+];
+---
+
+<Layout
+  title={`${site.nume} · bijuterii din aur de 14K, noi, din amanet și recondiționate`}
+  description="Bijuterii din aur de 14K: noi la comandă, din amanet și recondiționate. Gramaj și preț afișate la fiecare piesă. Cumpărăm aur de la persoane fizice."
+>
+  <section class="hero">
+    <Image src={img("tava-rosie")} alt="" widths={[768, 1280, 1920]} sizes="100vw" loading="eager" fetchpriority="high" class="hero-foto" />
+    <div class="wrap hero-continut">
+      <h1>Bijuterii din aur de 14K, noi și din amanet</h1>
+      <p class="mt-4 max-w-xl text-[1.08rem] font-medium">
+        Vindem și cumpărăm aur. Gramajul și prețul sunt scrise la fiecare piesă.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href={u("/bijuterii")} class="btn btn-gold">Vezi bijuteriile</a>
+        <a href={waLink("Bună ziua! Aș dori câteva detalii.")} target="_blank" rel="noopener" class="btn btn-wa"><IconWa size={18} /> {site.telefonAfisat}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap sectiune !pb-0">
+    <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      {(Object.keys(categoriiInfo) as Categorie[]).map((c) => (
+        <li class="max-sm:last:col-span-2">
+          <a href={u(`/bijuterii?categorie=${c}`)} class="group block border border-line no-underline">
+            <Image src={img(pozaCategorie[c])} alt="" width={360} height={270} class="aspect-[4/3] w-full object-cover max-sm:[li:last-child_&]:aspect-[8/3]" />
+            <span class="flex items-center justify-between bg-[#1c1c1c] px-3 py-2.5 font-bold text-white group-hover:bg-gold-bright group-hover:text-[#151515]">
+              {categoriiInfo[c]} <span class="text-[0.85rem] font-medium opacity-80">{cate(c)} piese</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="wrap sectiune">
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <h2>Bijuterii disponibile</h2>
+      <a href={u("/bijuterii")} class="link">Toate cele {bijuterii.length} piese</a>
+    </div>
+    <div class="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+      {alese.map((p, i) => <Card piesa={p} eager={i < 4} />)}
+    </div>
+  </section>
+
+  <section class="bg-paper-2">
+    <div class="wrap sectiune grid gap-6 md:grid-cols-[2fr_3fr] md:gap-10">
+      <Image src={img("maini-bijutier")} alt="Mâinile unui bijutier care lucrează la un inel" widths={[480, 800]} sizes="(min-width: 768px) 38vw, 100vw" class="aspect-[4/3] w-full object-cover md:aspect-auto md:h-full" />
+      <div class="despre">
+        <h2>Ce bijuterii vindem</h2>
+        <p><strong>Din amanet.</strong> Piese rămase nerăscumpărate. Sunt cele mai ieftine, de la {preturi.vanzare.amanet} lei pe gram, fiindcă plătiți doar aurul. <a href={u("/bijuterii?provenienta=amanet")}>Vezi piesele din amanet</a></p>
+        <p><strong>Recondiționate.</strong> Le cumpărăm de la persoane fizice, le curățăm la ultrasunete și le lustruim. Dacă o închizătoare sau o gheară nu ține, o reparăm înainte de vânzare. <a href={u("/bijuterii?provenienta=reconditionat")}>Vezi piesele recondiționate</a></p>
+        <p><strong>Noi, la comandă.</strong> Verighete, lănțișoare, pandantive cu inițială. Se lucrează în 10 – 14 zile de la comandă, de la {preturi.vanzare.nou} lei pe gram cu manoperă. <a href={u("/la-comanda")}>Cum se comandă</a></p>
+        <p class="nota">Nu avem încă magazin deschis. Până atunci, piesele se văd în poze și clipuri trimise pe WhatsApp și ajung prin curier.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-[#1c1c1c] text-white">
+    <div class="wrap sectiune grid gap-8 lg:grid-cols-2 lg:gap-12">
+      <div>
+        <h2>Cumpărăm aur</h2>
+        <p class="mt-2 text-white/80">Bijuterii vechi, rupte sau desperecheate, de la persoane fizice. Plata se face la predare.</p>
+        <table class="preturi mt-5 w-full cifra">
+          <caption class="sr-only">Prețuri de cumpărare pe gram, pe titluri</caption>
+          <thead><tr><th scope="col">Titlu</th><th scope="col">Marcaj</th><th scope="col" class="text-right">Plătim pe gram</th></tr></thead>
+          <tbody>
+            {preturi.cumparare.map((p) => (
+              <tr><th scope="row">Aur {p.carat}</th><td>{p.titlu}</td><td class="text-right"><strong>{p.leiGram} lei</strong></td></tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="mt-3 text-[0.88rem] text-white/65">Prețuri din {preturi.actualizat}. Pietrele se scad din greutate.</p>
+        <div class="mt-5 flex flex-wrap gap-2">
+          <a href={waLink("Bună ziua! Am aur de vândut. Vă pot trimite poze?")} target="_blank" rel="noopener" class="btn btn-wa"><IconWa size={18} /> Trimiteți o poză</a>
+          <a href={`tel:${site.telefon}`} class="btn btn-red">Sunați: {site.telefonAfisat}</a>
+        </div>
+      </div>
+      <Calculator peInchis />
+    </div>
+  </section>
+
+  <section class="wrap sectiune grid gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
+    <div>
+      <h2>Cum cumpărați</h2>
+      <ol class="pasi mt-4">
+        <li>Alegeți piesa și apăsați butonul verde. Se deschide WhatsApp cu codul ei deja scris.</li>
+        <li>Vă trimitem poze cu marcajul 585 și un clip cu piesa pe cântar.</li>
+        <li>O ținem rezervată 48 de ore, fără avans.</li>
+        <li>O primiți prin curier, cu verificare la primire, sau v-o predăm personal.</li>
+      </ol>
+    </div>
+    <div>
+      <h2>Întrebări frecvente</h2>
+      <div class="mt-4"><Faq intrebari={intrebari} /></div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero { position: relative; display: grid; align-items: center; min-height: clamp(20rem, 46vw, 28rem); background: #111; color: #fff; }
+  .hero :global(.hero-foto) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero::after { content: ""; position: absolute; inset: 0; background: rgb(0 0 0 / 0.62); }
+  .hero-continut { position: relative; z-index: 1; padding-block: 2.5rem; }
+  .hero h1 { max-width: 40rem; }
+
+  .despre p { margin-top: 0.9rem; max-width: 40rem; }
+  .despre a { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+  .despre a:hover { color: var(--color-gold); }
+  .despre .nota { font-size: 0.92rem; color: var(--color-ink-soft); }
+
+  .preturi th, .preturi td { padding: 0.65rem 0.75rem; border-bottom: 1px solid rgb(255 255 255 / 0.18); font-weight: 400; text-align: left; }
+  .preturi thead th { font-size: 0.85rem; font-weight: 700; background: #000; }
+  .preturi tbody tr:nth-child(even) { background: rgb(255 255 255 / 0.05); }
+  .preturi tbody th { font-weight: 700; }
+  .preturi td strong { font-size: 1.15rem; color: var(--color-gold-bright); }
+
+  .pasi { list-style: decimal; padding-left: 1.3rem; }
+  .pasi li { padding: 0.55rem 0 0.55rem 0.3rem; border-bottom: 1px solid var(--color-line); }
+  .pasi li::marker { font-weight: 700; }
+</style>
