@@ -1,0 +1,61 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card.astro";
+import IconWa from "../components/IconWa.astro";
+import { img } from "../data/img";
+import { site, waLink, preturi } from "../data/site";
+import { bijuterii } from "../data/bijuterii";
+
+const noi = bijuterii.filter((b) => b.provenienta === "nou").slice(0, 4);
+---
+
+<Layout
+  title={`Bijuterii noi din aur de 14K, la comandă · ${site.nume}`}
+  description="Verighete, lănțișoare, pandantive cu inițială și brățări gravate, lucrate din aur de 14K după ce confirmați comanda."
+>
+  <section class="wrap grid gap-8 pt-8 md:pt-10 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-14">
+    <div>
+      <h1 class="!text-[clamp(1.7rem,1.3rem+1.6vw,2.4rem)]">Bijuterii noi, lucrate la comandă</h1>
+      <p class="mt-5 max-w-xl text-[1.1rem] text-ink-soft">
+        Nu ținem bijuterii noi pe stoc. Alegeți modelul, stabilim mărimea și gramajul, iar piesa se lucrează
+        după ce confirmați comanda. Așa plătiți exact aurul din piesa dumneavoastră.
+      </p>
+      <a href={waLink("Bună ziua! Aș dori o bijuterie nouă, la comandă.")} target="_blank" rel="noopener" class="btn btn-wa mt-7"><IconWa /> Cereți o ofertă pe WhatsApp</a>
+    </div>
+    <Image src={img("pandantive-initiale")} alt="Lănțișoare din aur cu pandantive cu inițiale, pe catifea neagră" widths={[640, 1100]} sizes="(min-width: 1024px) 50vw, 100vw" loading="eager" class="aspect-[3/2] w-full rounded-(--radius-box) object-cover" />
+  </section>
+
+  <section class="wrap sectiune grid gap-12 lg:grid-cols-2 lg:gap-16">
+    <div>
+      <h2>Cum se calculează prețul</h2>
+      <dl class="mt-6 border-t border-ink cifra">
+        <div class="rand"><dt>Aur de 14K, cu manoperă</dt><dd>de la {preturi.vanzare.nou} lei/g</dd></div>
+        <div class="rand"><dt>Gravură interioară la verighete</dt><dd>inclusă</dd></div>
+        <div class="rand"><dt>Gravură pe plăcuță sau pandantiv</dt><dd>60 lei</dd></div>
+        <div class="rand"><dt>Pietre (zirconii)</dt><dd>după model</dd></div>
+        <div class="rand"><dt>Avans la comandă</dt><dd>30%</dd></div>
+        <div class="rand"><dt>Termen de lucru</dt><dd>10 – 14 zile</dd></div>
+      </dl>
+      <p class="mt-4 text-[0.95rem] text-ink-soft">
+        Dacă aduceți aur vechi, îl scădem din preț la cotația de cumpărare din ziua respectivă.
+      </p>
+    </div>
+    <div>
+      <h2>Pașii unei comenzi</h2>
+      <ol class="mt-6 space-y-5 border-t border-ink pt-5">
+        <li><h3>1. Modelul și mărimea</h3><p class="mt-1 text-ink-soft">Ne trimiteți o poză cu modelul dorit sau alegeți din exemplele de mai jos. Pentru inele vă explicăm cum aflați mărimea acasă, cu o bandă de hârtie.</p></li>
+        <li><h3>2. Oferta scrisă</h3><p class="mt-1 text-ink-soft">Primiți gramajul estimat, prețul pe gram și totalul. Comanda devine fermă după plata avansului.</p></li>
+        <li><h3>3. Piesa pe cântar</h3><p class="mt-1 text-ink-soft">Când este gata, o filmăm pe cântar. Dacă a ieșit mai ușoară decât în ofertă, plătiți mai puțin.</p></li>
+        <li><h3>4. Livrarea</h3><p class="mt-1 text-ink-soft">Curier cu colet asigurat și verificare la primire, ori predare personală.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="wrap pb-24">
+    <h2>Modele pe care le lucrăm des</h2>
+    <div class="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+      {noi.map((p) => <Card piesa={p} />)}
+    </div>
+  </section>
+</Layout>

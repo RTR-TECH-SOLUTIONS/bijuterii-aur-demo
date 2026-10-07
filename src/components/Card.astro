@@ -1,0 +1,47 @@
+---
+import { Image } from "astro:assets";
+import { img } from "../data/img";
+import { u, lei, grame, waLink } from "../data/site";
+import { type Piesa, provenienteInfo } from "../data/bijuterii";
+import IconWa from "./IconWa.astro";
+
+interface Props { piesa: Piesa; eager?: boolean }
+const { piesa: p, eager = false } = Astro.props;
+const reducere = p.pretVechi ? Math.round((1 - p.pret / p.pretVechi) * 100) : 0;
+const mesaj = `Bună ziua! Mă interesează piesa ${p.cod} (${p.nume}, ${grame(p.gramaj)}, ${lei(p.pret)}). Mai este disponibilă?`;
+---
+
+<article
+  class="piesa flex flex-col border border-line bg-white transition-shadow duration-150 hover:shadow-[0_2px_12px_rgb(0_0_0/0.14)]"
+  data-categorie={p.categorie}
+  data-provenienta={p.provenienta}
+  data-pret={p.pret}
+  data-gramaj={p.gramaj}
+  data-text={`${p.nume} ${p.cod} ${p.categorie}`.toLowerCase()}
+>
+  <a href={u(`/bijuterii/${p.slug}`)} class="relative block" tabindex="-1" aria-hidden="true">
+    <Image src={img(p.img)} alt="" width={520} height={520} loading={eager ? "eager" : "lazy"} class="aspect-square w-full object-cover" />
+    <span class:list={["eticheta", `eticheta-${p.provenienta}`]}>{provenienteInfo[p.provenienta].eticheta}</span>
+    {reducere > 0 && <span class="absolute right-0 top-2 bg-red px-2 py-0.5 text-[0.85rem] font-bold text-white">-{reducere}%</span>}
+  </a>
+  <div class="flex flex-1 flex-col p-3">
+    <p class="text-[0.78rem] text-ink-soft">Cod {p.cod}</p>
+    <h3 class="mt-0.5 text-[0.98rem] font-bold leading-snug"><a href={u(`/bijuterii/${p.slug}`)} class="no-underline hover:underline">{p.nume}</a></h3>
+    <p class="mt-1 text-[0.88rem] text-ink-soft">Aur 14K, {grame(p.gramaj)}{p.masura && !p.masura.startsWith("pe ") ? `, ${p.masura}` : ""}</p>
+    <div class="mt-auto flex items-end justify-between gap-2 pt-2.5">
+      <p class="leading-tight">
+        {p.pretVechi && <s class="block text-[0.85rem] text-ink-soft">{lei(p.pretVechi)}</s>}
+        {p.deLa && <span class="text-[0.85rem] text-ink-soft">de la </span>}
+        <strong class:list={["text-[1.2rem]", p.pretVechi && "text-red"]}>{lei(p.pret)}</strong>
+      </p>
+      <a href={waLink(mesaj)} target="_blank" rel="noopener" class="grid h-9 w-9 flex-none place-items-center rounded-full bg-wa text-white hover:brightness-110" aria-label={`Întrebați pe WhatsApp de piesa ${p.cod}`}><IconWa size={18} /></a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .eticheta { position: absolute; left: 0; top: 0.5rem; padding: 0.15rem 0.5rem; font-size: 0.78rem; font-weight: 700; }
+  .eticheta-amanet { background: #151515; color: #fff; }
+  .eticheta-reconditionat { background: var(--color-gold-bright); color: #151515; }
+  .eticheta-nou { background: #fff; color: #151515; border: 1px solid #151515; border-left: 0; }
+</style>

@@ -1,0 +1,11 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { site, u } from "../data/site";
+---
+<Layout title={`Pagină negăsită · ${site.nume}`} description="Pagina căutată nu există.">
+  <section class="wrap py-28">
+    <h1>Pagina nu există</h1>
+    <p class="mt-4 text-ink-soft">Se poate ca piesa să fi fost vândută între timp.</p>
+    <a href={u("/bijuterii")} class="btn btn-ink mt-8">Vedeți bijuteriile disponibile</a>
+  </section>
+</Layout>
