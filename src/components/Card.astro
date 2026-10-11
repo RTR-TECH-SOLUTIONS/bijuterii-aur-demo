@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import { img } from "../data/img";
 import { u, lei, grame, waLink } from "../data/site";
-import { type Piesa, provenienteInfo } from "../data/bijuterii";
+import { type Piesa, provenienteInfo, titluPiesa, masuraScurta } from "../data/bijuterii";
 import IconWa from "./IconWa.astro";
 
 interface Props { piesa: Piesa; eager?: boolean }
@@ -27,7 +27,7 @@ const mesaj = `Bună ziua! Mă interesează piesa ${p.cod} (${p.nume}, ${grame(p
   <div class="flex flex-1 flex-col p-3">
     <p class="text-[0.78rem] text-ink-soft">Cod {p.cod}</p>
     <h3 class="mt-0.5 text-[0.98rem] font-bold leading-snug"><a href={u(`/bijuterii/${p.slug}`)} class="no-underline hover:underline">{p.nume}</a></h3>
-    <p class="mt-1 text-[0.88rem] text-ink-soft">Aur 14K, {grame(p.gramaj)}{p.masura && !p.masura.startsWith("pe ") ? `, ${p.masura}` : ""}</p>
+    <p class="mt-1 text-[0.88rem] text-ink-soft">Aur {titluPiesa(p).carat}, {grame(p.gramaj)}{masuraScurta(p) && `, ${masuraScurta(p)}`}</p>
     <div class="mt-auto flex items-end justify-between gap-2 pt-2.5">
       <p class="leading-tight">
         {p.pretVechi && <s class="block text-[0.85rem] text-ink-soft">{lei(p.pretVechi)}</s>}

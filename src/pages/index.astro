@@ -11,7 +11,7 @@ import { bijuterii, categoriiInfo, type Categorie } from "../data/bijuterii";
 
 const alese = bijuterii.slice(0, 8);
 const pozaCategorie: Record<Categorie, string> = {
-  inele: "ghiul-onix", verighete: "verighete-satin", lanturi: "lant-curb", bratari: "bratara-fixa", cercei: "cercei-creole-groase",
+  inele: "ghiul-onix", verighete: "verighete-satin", lanturi: "lant-curb", bratari: "bratara-fixa", cercei: "cercei-creole-groase", monede: "moneda-krugerrand",
 };
 const cate = (c: string) => bijuterii.filter((b) => b.categorie === c).length;
 
@@ -31,7 +31,7 @@ const intrebari = [
   <section class="hero">
     <Image src={img("tava-rosie")} alt="" widths={[768, 1280, 1920]} sizes="100vw" loading="eager" fetchpriority="high" class="hero-foto" />
     <div class="wrap hero-continut">
-      <h1>Bijuterii din aur de 14K, noi și din amanet</h1>
+      <h1>Bijuterii și monede din aur, noi și din amanet</h1>
       <p class="mt-4 max-w-xl text-[1.08rem] font-medium">
         Vindem și cumpărăm aur. Gramajul și prețul sunt scrise la fiecare piesă.
       </p>
@@ -43,13 +43,13 @@ const intrebari = [
   </section>
 
   <section class="wrap sectiune !pb-0">
-    <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+    <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
       {(Object.keys(categoriiInfo) as Categorie[]).map((c) => (
-        <li class="max-sm:last:col-span-2">
+        <li>
           <a href={u(`/bijuterii?categorie=${c}`)} class="group block border border-line no-underline">
-            <Image src={img(pozaCategorie[c])} alt="" width={360} height={270} class="aspect-[4/3] w-full object-cover max-sm:[li:last-child_&]:aspect-[8/3]" />
+            <Image src={img(pozaCategorie[c])} alt="" width={360} height={270} class="aspect-[4/3] w-full object-cover" />
             <span class="flex items-center justify-between bg-[#1c1c1c] px-3 py-2.5 font-bold text-white group-hover:bg-gold-bright group-hover:text-[#151515]">
-              {categoriiInfo[c]} <span class="text-[0.85rem] font-medium opacity-80">{cate(c)} piese</span>
+              {categoriiInfo[c]} <span class="text-[0.82rem] font-medium opacity-80">{cate(c)}</span>
             </span>
           </a>
         </li>

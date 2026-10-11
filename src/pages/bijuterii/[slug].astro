@@ -5,7 +5,7 @@ import Card from "../../components/Card.astro";
 import IconWa from "../../components/IconWa.astro";
 import { img } from "../../data/img";
 import { site, u, waLink, lei, grame } from "../../data/site";
-import { bijuterii, provenienteInfo, categoriiInfo, pretPeGram, type Piesa } from "../../data/bijuterii";
+import { bijuterii, provenienteInfo, categoriiInfo, pretPeGram, titluPiesa, masuri, type Piesa } from "../../data/bijuterii";
 
 export function getStaticPaths() {
   return bijuterii.map((p) => ({ params: { slug: p.slug }, props: { p } }));
@@ -13,11 +13,12 @@ export function getStaticPaths() {
 
 const { p } = Astro.props as { p: Piesa };
 const prov = provenienteInfo[p.provenienta];
+const t = titluPiesa(p);
 const similare = bijuterii.filter((b) => b.slug !== p.slug && b.categorie === p.categorie).slice(0, 4);
 const mesaj = `Bună ziua! Mă interesează piesa ${p.cod} (${p.nume}, ${grame(p.gramaj)}, ${lei(p.pret)}). Mai este disponibilă?`;
 ---
 
-<Layout title={`${p.nume}, aur 14K, ${grame(p.gramaj)} · ${site.nume}`} description={`${p.nume} din aur de 14K, ${grame(p.gramaj)}. ${prov.eticheta}. ${p.descriere}`}>
+<Layout title={`${p.nume}, aur ${t.carat}, ${grame(p.gramaj)} · ${site.nume}`} description={`${p.nume} din aur de ${t.carat}, ${grame(p.gramaj)}. ${prov.eticheta}. ${p.descriere}`}>
   <div class="wrap pt-6 pb-20 md:pt-8">
     <nav aria-label="Fir de navigare" class="text-[0.92rem] text-ink-soft">
       <a href={u("/bijuterii")} class="hover:text-ink">Bijuterii</a>
@@ -39,9 +40,9 @@ const mesaj = `Bună ziua! Mă interesează piesa ${p.cod} (${p.nume}, ${grame(p
 
         <dl class="mt-6 border-t border-ink cifra">
           <div class="rand"><dt>Cod piesă</dt><dd>{p.cod}</dd></div>
-          <div class="rand"><dt>Titlu</dt><dd>14K, marcaj 585</dd></div>
+          <div class="rand"><dt>Titlu</dt><dd>{t.carat}, marcaj {t.marcaj}</dd></div>
           <div class="rand"><dt>Greutate</dt><dd>{grame(p.gramaj)}</dd></div>
-          {p.masura && <div class="rand"><dt>Măsură</dt><dd>{p.masura}</dd></div>}
+          {masuri(p).map((m) => <div class="rand"><dt>{m.eticheta}</dt><dd>{m.valoare}</dd></div>)}
           <div class="rand"><dt>Preț pe gram</dt><dd>{pretPeGram(p)} lei/g</dd></div>
           <div class="rand"><dt>Stare</dt><dd class="max-w-[62%] !font-medium">{p.stare}</dd></div>
         </dl>
